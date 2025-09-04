@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PESU Profile Portal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #1abc9c, #16a085);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .topbar {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .topbar h2 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+    .timebox {
+      font-size: 14px;
+      color: #eafff5;
+    }
+    .wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      width: 95%;
+      max-width: 1000px;
+    }
+    .inputcard, .displaycard {
+      flex: 1;
+      min-width: 300px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .inputcard h3, .displaycard h3 {
+      margin-bottom: 15px;
+      color: #1abc9c;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 5px;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #1abc9c;
+      outline: none;
+    }
+    .radiobox {
+      margin-bottom: 15px;
+    }
+    .radiobox input {
+      margin-right: 6px;
+    }
+    .radiobox label {
+      display: inline-block;
+      margin-right: 15px;
+      font-weight: normal;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #1abc9c;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #16a085;
+    }
+    .ditem {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+    .ditem strong {
+      color: #222;
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #1abc9c;
+      margin-bottom: 10px;
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .wrapper {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h2>PESU Profile Creator</h2>
+    <div class="timebox" id="clockbox"></div>
+  </div>
+  <div class="wrapper">
+    <div class="inputcard">
+      <h3>Details</h3>
+      <form id="regForm">
+        <label for="fname">Full Name *</label>
+        <input type="text" id="fname" required placeholder="Your name">
+        <label for="fmail">Email *</label>
+        <input type="email" id="fmail" required placeholder="example@mail.com">
+        <label for="fphone">Phone *</label>
+        <input type="tel" id="fphone" pattern="[0-9]{10}" required placeholder="10 digits">
+        <label>Gender *</label>
+        <div class="radiobox">
+          <input type="radio" name="fgender" value="Male" required> <label>Male</label>
+          <input type="radio" name="fgender" value="Female"> <label>Female</label>
+          <input type="radio" name="fgender" value="Other"> <label>Other</label>
+        </div>
+        <label for="fdept">Department *</label>
+        <select id="fdept" required>
+          <option value="">--Select--</option>
+          <option value="CSE">CSE</option>
+          <option value="ECE">ECE</option>
+          <option value="ME">ME</option>
+          <option value="EEE">EEE</option>
+        </select>
+        <label for="fbio">Bio</label>
+        <textarea id="fbio" rows="3" placeholder="Say something..."></textarea>
+        <label for="fphoto">Upload Photo</label>
+        <input type="file" id="fphoto" accept="image/*">
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <div class="displaycard">
+      <h3>Preview</h3>
+      <img id="pavatar" class="avatar">
+      <div class="ditem"><strong>Name:</strong> <span id="pname">---</span></div>
+      <div class="ditem"><strong>Email:</strong> <span id="pmail">---</span></div>
+      <div class="ditem"><strong>Phone:</strong> <span id="pphone">---</span></div>
+      <div class="ditem"><strong>Gender:</strong> <span id="pgender">---</span></div>
+      <div class="ditem"><strong>Department:</strong> <span id="pdept">---</span></div>
+      <div class="ditem"><strong>Bio:</strong> <span id="pbio">---</span></div>
+    </div>
+  </div>
+  <script>
+    function tick() {
+      const now = new Date();
+      document.getElementById("clockbox").innerText = now.toLocaleDateString()+" "+now.toLocaleTimeString();
+    }
+    setInterval(tick, 1000); tick();
+    const fname=document.getElementById("fname");
+    const fmail=document.getElementById("fmail");
+    const fphone=document.getElementById("fphone");
+    const fdept=document.getElementById("fdept");
+    const fbio=document.getElementById("fbio");
+    const fphoto=document.getElementById("fphoto");
+    const pname=document.getElementById("pname");
+    const pmail=document.getElementById("pmail");
+    const pphone=document.getElementById("pphone");
+    const pgender=document.getElementById("pgender");
+    const pdept=document.getElementById("pdept");
+    const pbio=document.getElementById("pbio");
+    const pavatar=document.getElementById("pavatar");
+    fname.addEventListener("input",()=>pname.innerText=fname.value||"---");
+    fmail.addEventListener("input",()=>pmail.innerText=fmail.value||"---");
+    fphone.addEventListener("input",()=>pphone.innerText=fphone.value||"---");
+    fbio.addEventListener("input",()=>pbio.innerText=fbio.value||"---");
+    fdept.addEventListener("change",()=>pdept.innerText=fdept.value||"---");
+    document.querySelectorAll("input[name='fgender']").forEach(r=>r.addEventListener("change",()=>pgender.innerText=r.value));
+    fphoto.addEventListener("change",e=>{
+      const file=e.target.files[0];
+      if(file){const reader=new FileReader();reader.onload=x=>{pavatar.src=x.target.result;pavatar.style.display="block"};reader.readAsDataURL(file);}
+    });
+    document.getElementById("regForm").addEventListener("submit",e=>{
+      e.preventDefault();
+      alert("Profile submitted!");
+    });
+  </script>
+</body>
+</html>
